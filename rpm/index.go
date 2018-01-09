@@ -27,6 +27,7 @@ type Package struct {
 	Version       string            `json:"version,omitempty"`
 	Arch          string            `json:"arch,omitempty"`
 	Release       string            `json:"release,omitempty"`
+	Epoch         string            `json:"epoch,omitempty"`
 	Group         string            `json:"group,omitempty"`
 	License       string            `json:"license,omitempty"`
 	URL           string            `json:"url,omitempty"`
@@ -106,6 +107,9 @@ func (p *Package) Normalize(arch string, version string) error {
 	if p.Release == "" {
 		p.Release = "1"
 	}
+	if p.Epoch == "" {
+		p.Epoch = "0"
+	}
 	if p.Version == "" {
 		p.Version = version
 	}
@@ -120,6 +124,7 @@ func (p *Package) Normalize(arch string, version string) error {
 	logger.Printf("Arch=%s\n", p.Arch)
 	logger.Printf("Version=%s\n", p.Version)
 	logger.Printf("Release=%s\n", p.Release)
+	logger.Printf("Epoch=%s\n", p.Epoch)
 	logger.Printf("URL=%s\n", p.URL)
 	logger.Printf("Summary=%s\n", p.Summary)
 	logger.Printf("Description=%s\n", p.Description)
@@ -284,6 +289,9 @@ func (p *Package) GenerateSpecFile(sourceDir string) (string, error) {
 	}
 	if p.Version != "" {
 		spec += fmt.Sprintf("Version: %s\n", okVersion)
+	}
+	if p.Epoch != "0" {
+		spec += fmt.Sprintf("Epoch: %s\n", p.Epoch)
 	}
 	if p.Release != "" {
 		spec += fmt.Sprintf("Release: %s\n", preRelease)
